@@ -10,7 +10,8 @@ group :development, :test do
   gem 'rspec-rails', '2.11.0'
   gem 'guard-rspec', '1.2.1'
 
-  gem 'guard-spork', '1.2.0' 
+  gem 'guard-spork', '1.4.2' # version 1.4.2 will fix error message that was coming up (http://stackoverflow.com/questions/14590399/error-on-start-when-using-spork-and-guard)
+  
   gem 'spork', '0.9.2' #lets you load rails environment just once
 
 end
