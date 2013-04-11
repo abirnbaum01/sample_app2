@@ -1,5 +1,9 @@
 SampleApp2::Application.routes.draw do
+  get "users/new"
+
   root to: 'static_pages#home'
+
+  match '/signup', to: 'users#new'
 
   #arrange for valid page at /help and crate named route help_path
   match '/help',  to: 'static_pages#help'
