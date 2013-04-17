@@ -1,9 +1,12 @@
 SampleApp2::Application.routes.draw do
   resources :users
 
-  root to: 'static_pages#home'
+  resources :sessions, only: [:new, :create, :destroy]
+  match '/signup',  to: 'users#new'
+  match '/signin',  to: 'sessions#new'
+  match '/signout', to: 'sessions#destroy', via: :delete
 
-  match '/signup', to: 'users#new'
+  root to: 'static_pages#home'
 
   #arrange for valid page at /help and crate named route help_path
   match '/help',  to: 'static_pages#help'
