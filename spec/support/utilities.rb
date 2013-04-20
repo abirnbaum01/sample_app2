@@ -12,6 +12,20 @@ RSpec::Matchers.define :have_error_message do |message|
   end
 end
 
+RSpec::Matchers.define :have_title_selector do |message|
+  match do |page|
+    page.should have_selector('title', text: message)
+  end
+end
+
+RSpec::Matchers.define :have_h1_selector do |message|
+  match do |page|
+    page.should have_selector('h1', text: message)
+  end
+end
+
+
+
 
 # Old full_title helper code....
 =begin
