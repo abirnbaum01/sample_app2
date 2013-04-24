@@ -5,9 +5,14 @@ class UsersController < ApplicationController
   before_filter :admin_user,     only: :destroy
 
   def destroy
-    User.find(params[:id]).destroy
-    flash[:success] = "User deleted."
-    redirect_to users_url
+    if User.find(params[:id]).admin?
+      flash[:notice] = "Cannot delete admin"
+      redirect_to users_path
+    else
+      User.find(params[:id]).destroy
+      flash[:success] = "User deleted."
+      redirect_to users_url
+    end
   end
 
   def show
@@ -15,11 +20,16 @@ class UsersController < ApplicationController
   end
   
   def new
-  	@user = User.new
+  	if signed_in?
+      redirect_to(root_path)
+    else
+      @user = User.new
+    end
   end
 
   def create
-  	@user = User.new(params[:user])
+  	redirect_to(root_path) unless !signed_in?
+    @user = User.new(params[:user])
   	if @user.save
       sign_in @user
       flash[:success] = "Welcome to the Sample App!"
@@ -44,6 +54,17 @@ class UsersController < ApplicationController
 
   def index
     @users = User.paginate(page: params[:page])
+   
+    # Code for testing the request command
+    test_request = nil
+    if test_request
+      if request.local? 
+        flash[:notice] = "Local request from " << request.ip << " located at " << request.fullpath
+      else
+        flash[:notice] = "Nonlocal request"
+      end
+    end
+  
   end
 
   private

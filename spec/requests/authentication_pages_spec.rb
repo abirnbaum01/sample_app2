@@ -46,6 +46,8 @@ describe "Authentication" do
       describe "followed by sign out" do
         before { click_link "Sign out" }
         it { should have_link('Sign in') }
+        it { should_not have_link('Profile') }
+        it { should_not have_link('Settings') }
       end
     end
   end
@@ -86,6 +88,20 @@ describe "Authentication" do
           it "should render the desired protected page" do
             page.should have_selector('title', text: 'Edit user')
           end
+
+          describe "when signing in again" do
+            before do
+              delete signout_path
+              visit signin_path
+              fill_in "Email",        with: user.email
+              fill_in "Password",     with: user.password
+              click_button "Sign in"
+            end
+
+            it "should render the default (profile) page" do
+              page.should have_selector('title', text: user.name)
+            end
+          end
         end
       end
     end
@@ -117,7 +133,19 @@ describe "Authentication" do
         specify { response.should redirect_to(root_path) }        
       end
     end
+   
 
+    describe "as admin user" do
+      let(:admin) { FactoryGirl.create(:admin) }
+      before do
+        sign_in admin
+        visit users_path
+      end
+
+      describe "should not be able to destroy themselves" do
+        before { delete user_path(admin) }
+        specify { response.should redirect_to(users_path) }
+      end
+    end
   end
-
 end
