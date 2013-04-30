@@ -28,6 +28,16 @@ describe "Micropost pages" do
       it "should create a micropost" do
         expect { click_button "Post" }.to change(Micropost, :count).by(1)
       end
+
+    end
+    
+    describe "pagination" do
+
+      it "should paginate the feed" do
+        30.times { FactoryGirl.create(:micropost, user: user, content: "Testing 123") }  
+        visit root_path
+        page.should have_selector('div', class: 'pagination')
+      end
     end
   end
 
@@ -41,5 +51,17 @@ describe "Micropost pages" do
         expect { click_link "delete" }.to change(Micropost, :count).by(-1)
       end
     end
+
+    describe "as incorrect user" do
+      let(:wrong_user) { FactoryGirl.create(:user, email: 'wrong@example.com') }
+      before do
+        sign_in wrong_user
+        visit root_path
+      end
+      
+      it { should_not have_link('delete') }
+
+    end
+
   end
 end

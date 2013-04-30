@@ -31,6 +31,11 @@ describe "Static pages" do
           page.should have_selector("li##{item.id}", text: item.content)
         end
       end
+
+      describe "in the side bar" do
+        it { should have_content('2 microposts') }
+      end
+
     end
     
   end  
